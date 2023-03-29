@@ -40,6 +40,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  #State management
+  flutter_bloc: ^8.1.2
+  #HTTP client
+  dio: ^5.1.0
+  #SQLite
+  sqflite: ^2.2.6
+  
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
