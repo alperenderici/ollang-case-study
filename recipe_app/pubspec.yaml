@@ -43,9 +43,12 @@ dev_dependencies:
   #State management
   flutter_bloc: ^8.1.2
   #HTTP client
+  http: ^0.13.5
   dio: ^5.1.0
   #SQLite
   sqflite: ^2.2.6
+  #Operations
+  path: ^1.8.2
   
 
 
