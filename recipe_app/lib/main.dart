@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<HomePageCubit>(
           create: (context) => HomePageCubit(RecipeRepository()),
         ),
-        // BlocProvider<RecipeDetailCubit>(
-        //   create: (context) => RecipeDetailCubit(),
-        // ),
+        BlocProvider<RecipeDetailCubit>(
+          create: (context) => RecipeDetailCubit(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -49,12 +49,11 @@ class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
                   icon: const Icon(Icons.search),
                 ),
           IconButton(
-            //isFav selected true
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: ((context) => Homepage()),
+                  builder: ((context) => const Homepage()),
                 ),
               );
               // .then((value) {
