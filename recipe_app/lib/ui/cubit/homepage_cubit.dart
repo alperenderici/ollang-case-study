@@ -9,7 +9,17 @@ class HomePageCubit extends Cubit<HomepageState> {
   Future<void> getRecipes() async {
     emit(LoadingHomepageState());
     try {
-      var response = await _recipeRepository.getApiData();
+      var response = await _recipeRepository.getRandomApiData();
+      emit(ResponseHomepageState(response));
+    } catch (e) {
+      emit(ErrorHomepageState(e.toString()));
+    }
+  }
+
+  Future<void> searchRecipes(String query) async {
+    emit(LoadingHomepageState());
+    try {
+      var response = await _recipeRepository.searchApiData(query);
       emit(ResponseHomepageState(response));
     } catch (e) {
       emit(ErrorHomepageState(e.toString()));

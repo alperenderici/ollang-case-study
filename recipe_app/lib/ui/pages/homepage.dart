@@ -34,7 +34,7 @@ class _HomepageState extends State<Homepage> {
               ? TextField(
                   decoration: const InputDecoration(hintText: "Search Recipe"),
                   onChanged: (searchResult) {
-                    //TODO SEARCH RECIPES
+                    context.read<HomePageCubit>().searchRecipes(searchResult);
                   },
                 )
               : const Text(
@@ -54,7 +54,6 @@ class _HomepageState extends State<Homepage> {
                     onPressed: () {
                       setState(() {
                         isSearch = true;
-                        //TODO GET RECIPES
                       });
                     },
                     icon: const Icon(Icons.search),
@@ -127,7 +126,6 @@ class _HomepageState extends State<Homepage> {
                 },
               );
             } else if (state is ErrorHomepageState) {
-              print(state.message);
               return Center(child: Text(state.message));
             }
             return Center(child: Text(state.toString()));
