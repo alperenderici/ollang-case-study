@@ -29,7 +29,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.purple[100],
         appBar: AppBar(
           title: isSearch
               ? TextField(
@@ -60,6 +59,7 @@ class _HomepageState extends State<Homepage> {
                     icon: const Icon(Icons.search),
                   ),
             IconButton(
+              //isFav selected true
               onPressed: () {
                 Navigator.push(
                   context,
@@ -72,13 +72,7 @@ class _HomepageState extends State<Homepage> {
                 // });
               },
               icon: const Icon(Icons.favorite_border),
-            ),
-            IconButton(
-              onPressed: () {
-                context.read<HomePageCubit>().getRecipes();
-              },
-              icon: const Icon(Icons.refresh_rounded),
-            ),
+            )
           ],
         ),
         body: BlocBuilder<HomePageCubit, HomepageState>(
@@ -101,36 +95,31 @@ class _HomepageState extends State<Homepage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: ((context) => RecipeDetailPage(
-                                recipe: recipes[index],
-                              )),
+                          builder: ((context) => RecipeDetailPage()),
                         ),
-                      );
+                      ); //TODO NAVIGATE TO RECIPE DETAIL PAGE
                     },
                     child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: Image.network(
-                                recipes[index].image,
-                                fit: BoxFit.cover,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Image.network(
+                              recipes[index].image,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              recipes[index].label,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Text(
-                                recipes[index].label,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );
