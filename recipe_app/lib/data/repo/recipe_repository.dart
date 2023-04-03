@@ -22,12 +22,13 @@ class RecipeRepository {
         final recipe = result['recipe'] as Map<String, dynamic>;
         final label = recipe['label'] as String;
         final image = recipe['image'] as String;
-        final url = recipe['url'] as String;
+        final ingredients =
+            List<Map<String, dynamic>>.from(recipe['ingredients']);
         final ingredientLines = List<String>.from(recipe['ingredientLines']);
         return Recipe(
           label: label,
           image: image,
-          url: url,
+          ingredients: ingredients,
           ingredientLines: ingredientLines,
         );
       }).toList();
@@ -38,7 +39,7 @@ class RecipeRepository {
   }
 
   Future<List<Recipe>> searchApiData(String searchword) async {
-    final url = "$baseUrl&q=$searchword&random=false&to=20";
+    final url = "$baseUrl&q=$searchword";
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -47,12 +48,13 @@ class RecipeRepository {
         final recipe = result['recipe'] as Map<String, dynamic>;
         final label = recipe['label'] as String;
         final image = recipe['image'] as String;
-        final url = recipe['url'] as String;
+        final ingredients =
+            List<Map<String, dynamic>>.from(recipe['ingredients']);
         final ingredientLines = List<String>.from(recipe['ingredientLines']);
         return Recipe(
           label: label,
           image: image,
-          url: url,
+          ingredients: ingredients,
           ingredientLines: ingredientLines,
         );
       }).toList();
@@ -68,8 +70,7 @@ class RecipeRepository {
   //   int from = 0;
 
   //   while (true) {
-  //     final url =
-  //         '$baseUrl&q=$searchword&random=false&from=$from&to=${from + 20}';
+  //     final url = '$baseUrl&q=$searchword&from=$from&to=${from + 20}';
   //     final response = await http.get(Uri.parse(url));
   //     if (response.statusCode == 200) {
   //       final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -78,12 +79,13 @@ class RecipeRepository {
   //         final recipe = result['recipe'] as Map<String, dynamic>;
   //         final label = recipe['label'] as String;
   //         final image = recipe['image'] as String;
-  //         final url = recipe['url'] as String;
+  //         final ingredients =
+  //             List<Map<String, dynamic>>.from(recipe['ingredients']);
   //         final ingredientLines = List<String>.from(recipe['ingredientLines']);
   //         return Recipe(
   //           label: label,
   //           image: image,
-  //           url: url,
+  //           ingredients: ingredients,
   //           ingredientLines: ingredientLines,
   //         );
   //       }).toList();
@@ -98,5 +100,5 @@ class RecipeRepository {
   //   }
   //   return recipes;
   // }
-
 }//class bracet
+
