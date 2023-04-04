@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe_app/ui/cubit/favorite_recipes_cubit.dart';
 import 'package:recipe_app/ui/cubit/homepage_cubit.dart';
 import 'package:recipe_app/ui/cubit/homepage_state.dart';
 import 'package:recipe_app/ui/pages/favorite_recipes_page.dart';
@@ -64,12 +65,13 @@ class _HomepageState extends State<Homepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) => FavoriteRecipesPage()),
+                    builder: ((context) => const FavoriteRecipesPage()),
                   ),
+                ).then(
+                  (value) => context
+                      .read<FavoriteRecipesCubit>()
+                      .loadFavoriteRecipes(),
                 );
-                // .then((value) {
-                // TODO GET FAV RECIPES
-                // });
               },
               icon: const Icon(Icons.favorite_border),
             ),
@@ -87,54 +89,57 @@ class _HomepageState extends State<Homepage> {
               return const Center(child: CircularProgressIndicator());
             } else if (state is ResponseHomepageState) {
               final recipes = state.recipes;
-              return GridView.builder(
-                itemCount: recipes.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: ((context) => RecipeDetailPage(
-                                recipe: recipes[index],
-                              )),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: Image.network(
-                                recipes[index].image,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Text(
-                                recipes[index].label,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  itemCount: recipes.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: ((context) => RecipeDetailPage(
+                                  recipe: recipes[index],
+                                )),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Image.network(
+                                  recipes[index].image,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  recipes[index].label,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               );
             } else if (state is ErrorHomepageState) {
               return Center(child: Text(state.message));

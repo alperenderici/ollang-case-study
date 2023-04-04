@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe_app/data/entity/recipe.dart';
+import 'package:recipe_app/ui/cubit/favorite_recipes_cubit.dart';
+import 'package:recipe_app/ui/cubit/favorite_recipes_state.dart';
 
 class RecipeDetailPage extends StatefulWidget {
   Recipe recipe;
@@ -14,8 +17,32 @@ class RecipeDetailPage extends StatefulWidget {
 }
 
 class _RecipeDetailPageState extends State<RecipeDetailPage> {
-  bool isFav = false;
-  bool isFavSelected = false;
+  late bool _isFav;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfFav();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final cubit = context.read<FavoriteRecipesCubit>();
+      cubit.loadFavoriteRecipes();
+    });
+    _isFav = widget.recipe.isFavorite;
+  }
+
+  void checkIfFav() {
+    final cubit = context.read<FavoriteRecipesCubit>();
+    cubit.loadFavoriteRecipes();
+    if (cubit.state is FavoriteRecipesLoaded) {
+      final state = cubit.state as FavoriteRecipesLoaded;
+      for (var recipe in state.favoriteRecipes) {
+        if (recipe.label == widget.recipe.label) {
+          _isFav = true;
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +52,22 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
           child: Text(widget.recipe.label),
         ),
         actions: [
-          isFav
-              ? IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isFav = !isFav;
-                    });
-                  },
-                  icon: const Icon(Icons.favorite),
-                )
-              : IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isFav = !isFav;
-                    });
-                  },
-                  icon: const Icon(Icons.favorite_border),
-                ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isFav = !_isFav;
+                // context
+                //     .read<FavoriteRecipesCubit>()
+                //     .addFavoriteRecipe(widget.recipe);
+                context
+                    .read<FavoriteRecipesCubit>()
+                    .toggleFavorite(widget.recipe);
+              });
+            },
+            icon: _isFav
+                ? const Icon(Icons.favorite)
+                : const Icon(Icons.favorite_border),
+          ),
         ],
       ),
       body: Padding(
