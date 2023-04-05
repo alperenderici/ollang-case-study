@@ -8,15 +8,13 @@ class RecipeDetailCubit extends Cubit<RecipeDetailState> {
 
   void getRecipeDetail(String recipeId) {
     emit(RecipeDetailLoading());
-    //TODO GET RECIPE DETAIL
-
+    //
     emit(RecipeDetailLoaded(recipeId));
   }
 
   void addToFavorite(String recipeId) {
     emit(RecipeDetailLoading());
-    //TODO ADD TO FAVORITE
-
+    //
     emit(RecipeDetailLoaded(recipeId));
   }
 }

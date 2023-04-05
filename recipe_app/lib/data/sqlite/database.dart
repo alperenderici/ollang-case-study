@@ -10,6 +10,7 @@ class DB {
     final dbPath = join(await getDatabasesPath(), _dbName);
 
     if (await databaseExists(dbPath)) {
+      print("database exists");
     } else {
       ByteData data = await rootBundle.load(join('lib/database/$_dbName'));
       List<int> bytes =

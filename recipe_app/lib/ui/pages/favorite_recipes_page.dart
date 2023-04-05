@@ -61,7 +61,7 @@ class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
                   onPressed: () {
                     setState(() {
                       isSearch = true;
-                      //TODO GET RECIPES
+                      //
                     });
                   },
                   icon: const Icon(Icons.search),

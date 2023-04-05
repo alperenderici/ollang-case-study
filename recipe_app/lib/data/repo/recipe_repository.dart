@@ -12,7 +12,7 @@ class RecipeRepository {
   final baseUrl =
       "https://api.edamam.com/api/recipes/v2?type=public&app_id=7f9c315e&app_key=f191e18006552fc1611655e94b4d96ec&imageSize=LARGE";
 
-//list of recipes
+//list of random recipes
   Future<List<Recipe>> getRandomApiData() async {
     final url = "$baseUrl&random=true";
     var response = await http.get(Uri.parse(url));
@@ -41,6 +41,7 @@ class RecipeRepository {
     }
   }
 
+  //search recipes
   Future<List<Recipe>> searchApiData(String searchword) async {
     final url = "$baseUrl&q=$searchword";
     var response = await http.get(Uri.parse(url));
@@ -69,12 +70,12 @@ class RecipeRepository {
     }
   }
 
-  //add favorite recipe with using hive
+  //add favorite recipe
   Future<void> addFavRecipe(Recipe recipe) async {
     LocalStorage.addFavRecipe(recipe.toJson());
   }
 
-  //list favorite recipes with using hive
+  //list favorite recipes
   Future<List<Recipe>> listFavRecipes() async {
     List<String> favs = await LocalStorage.getFavRecipes();
     return List.generate(favs.length, (index) {
@@ -83,7 +84,7 @@ class RecipeRepository {
     });
   }
 
-  //search favorite recipes with using hive
+  //search favorite recipes
   Future<List<Recipe>> searchFavRecipes(String searchword) async {
     List<String> favs = await LocalStorage.searchFavRecipes(searchword);
     return List.generate(favs.length, (index) {
@@ -92,17 +93,17 @@ class RecipeRepository {
     });
   }
 
-  // add favorite recipe
-  // Future<void> addFavRecipe(Recipe recipe) async {
-  //   LocalStorage.addFav(Recipe.toJson(json));
-  // }
-
   // delete favorite recipe
   Future<void> deleteFavRecipe(Recipe recipe) async {
     var db = await DB.connectDB();
     await db
         .delete('favs', where: 'recipe_label = ?', whereArgs: [recipe.label]);
   }
+
+  // add favorite recipe
+  // Future<void> addFavRecipe(Recipe recipe) async {
+  //   LocalStorage.addFav(Recipe.toJson(json));
+  // }
 
   // list favorite recipes
   // Future<List<Recipe>> listFavRecipes() async {

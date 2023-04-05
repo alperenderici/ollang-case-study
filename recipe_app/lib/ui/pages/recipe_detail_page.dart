@@ -57,12 +57,12 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             onPressed: () {
               setState(() {
                 _isFav = !_isFav;
-                context
-                    .read<FavoriteRecipesCubit>()
-                    .addFavoriteRecipe(widget.recipe);
                 // context
                 //     .read<FavoriteRecipesCubit>()
-                //     .toggleFavorite(widget.recipe);
+                //     .addFavoriteRecipe(widget.recipe);
+                context
+                    .read<FavoriteRecipesCubit>()
+                    .toggleFavorite(widget.recipe);
               });
             },
             icon: _isFav

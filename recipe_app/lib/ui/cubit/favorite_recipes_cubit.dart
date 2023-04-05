@@ -8,6 +8,7 @@ class FavoriteRecipesCubit extends Cubit<FavoriteRecipesState> {
 
   FavoriteRecipesCubit(this._repository) : super(InitFavoriteRecipesState());
 
+  //get favorite recipes
   Future<void> loadFavoriteRecipes() async {
     try {
       final favoriteRecipes = await _repository.listFavRecipes();
@@ -17,6 +18,7 @@ class FavoriteRecipesCubit extends Cubit<FavoriteRecipesState> {
     }
   }
 
+  //add favorite recipe
   Future<void> addFavoriteRecipe(Recipe recipe) async {
     try {
       await _repository.addFavRecipe(recipe);
@@ -32,26 +34,28 @@ class FavoriteRecipesCubit extends Cubit<FavoriteRecipesState> {
     }
   }
 
-  // void toggleFavorite(
-  //   Recipe recipe,
-  // ) async {
-  //   try {
-  //     if (recipe.isFavorite) {
-  //       await _repository.deleteFavRecipe(recipe);
-  //     } else {
-  //       await _repository.addFavRecipe(recipe);
-  //     }
-  //     final updatedRecipe = recipe.copyWith(isFavorite: !recipe.isFavorite);
-  //     emit(
-  //       FavoriteRecipeToggled(updatedRecipe),
-  //     );
-  //   } catch (e) {
-  //     emit(
-  //       FavoriteRecipesError('Failed to toggle favorite recipe: $e'),
-  //     );
-  //   }
-  // }
+  //click add another for delete
+  void toggleFavorite(
+    Recipe recipe,
+  ) async {
+    try {
+      if (recipe.isFavorite) {
+        await _repository.deleteFavRecipe(recipe);
+      } else {
+        await _repository.addFavRecipe(recipe);
+      }
+      final updatedRecipe = recipe.copyWith(isFavorite: !recipe.isFavorite);
+      emit(
+        FavoriteRecipeToggled(updatedRecipe),
+      );
+    } catch (e) {
+      emit(
+        FavoriteRecipesError('Failed to toggle favorite recipe: $e'),
+      );
+    }
+  }
 
+  //search favorite recipes
   void deleteFavoriteRecipe(Recipe recipe) async {
     try {
       await _repository.deleteFavRecipe(recipe);

@@ -17,7 +17,6 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   bool isSearch = false;
   bool isFav = false;
-  bool isFavSelected = false;
 
   @override
   void initState() {
