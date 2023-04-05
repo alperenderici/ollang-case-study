@@ -1,16 +1,18 @@
+import 'dart:convert';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Recipe {
   final String label;
   final String image;
-  final List<Map<String, dynamic>> ingredients;
-  final List<String> ingredientLines;
+  final List<Map<String, dynamic>>? ingredients;
+  final List<String>? ingredientLines;
   final bool isFavorite;
 
   Recipe({
     required this.label,
     required this.image,
-    required this.ingredients,
-    required this.ingredientLines,
+    this.ingredients,
+    this.ingredientLines,
     required this.isFavorite,
   });
 
@@ -44,4 +46,16 @@ class Recipe {
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'label': label,
+      'image': image,
+      'ingredients': ingredients,
+      'ingredientLines': ingredientLines,
+      'isFavorite': isFavorite,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 }

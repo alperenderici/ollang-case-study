@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe_app/data/entity/recipe.dart';
+import 'package:recipe_app/data/repo/recipe_repository.dart';
 import 'package:recipe_app/ui/cubit/favorite_recipes_cubit.dart';
 import 'package:recipe_app/ui/cubit/favorite_recipes_state.dart';
 
@@ -10,6 +11,7 @@ class RecipeDetailPage extends StatefulWidget {
   RecipeDetailPage({
     Key? key,
     required this.recipe,
+    required RecipeRepository recipeRepository,
   }) : super(key: key);
 
   @override
@@ -23,7 +25,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   void initState() {
     super.initState();
     checkIfFav();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final cubit = context.read<FavoriteRecipesCubit>();
       cubit.loadFavoriteRecipes();
@@ -56,12 +57,12 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             onPressed: () {
               setState(() {
                 _isFav = !_isFav;
-                // context
-                //     .read<FavoriteRecipesCubit>()
-                //     .addFavoriteRecipe(widget.recipe);
                 context
                     .read<FavoriteRecipesCubit>()
-                    .toggleFavorite(widget.recipe);
+                    .addFavoriteRecipe(widget.recipe);
+                // context
+                //     .read<FavoriteRecipesCubit>()
+                //     .toggleFavorite(widget.recipe);
               });
             },
             icon: _isFav
@@ -75,7 +76,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
         child: ListView(
           children: [
             Card(
-              color: Colors.green[100],
+              color: Colors.deepPurple[100],
               child: Column(
                 children: [
                   Padding(
@@ -83,7 +84,11 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     child: Card(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Image.network(widget.recipe.image),
+                      child: Image.network(
+                        widget.recipe.image,
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        fit: BoxFit.cover,
+                      ),
                     )),
                   ),
                   Padding(
@@ -103,7 +108,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               ),
             ),
             Card(
-              color: Colors.blue[100],
+              color: Colors.purple[100],
               child: Column(
                 children: [
                   Padding(
@@ -131,7 +136,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: widget.recipe.ingredients.length,
+                    itemCount: widget.recipe.ingredients?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -144,15 +149,16 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               leading: Image.network(
-                                widget.recipe.ingredients[index]['image']
+                                widget.recipe.ingredients![index]['image']
                                     .toString(),
                               ),
                               subtitle: Text(
-                                widget.recipe.ingredients[index]['foodCategory']
+                                widget
+                                    .recipe.ingredients![index]['foodCategory']
                                     .toString(),
                               ),
                               title: Text(
-                                widget.recipe.ingredients[index]['text']
+                                widget.recipe.ingredients![index]['text']
                                     .toString(),
                               ),
                             ),
@@ -195,7 +201,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: widget.recipe.ingredientLines.length,
+                      itemCount: widget.recipe.ingredientLines?.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -218,7 +224,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      widget.recipe.ingredientLines[index],
+                                      widget.recipe.ingredientLines![index],
                                     ),
                                   ),
                                 ),

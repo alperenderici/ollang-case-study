@@ -5,8 +5,14 @@ import 'package:recipe_app/ui/cubit/recipe_detail_cubit.dart';
 import 'package:recipe_app/ui/pages/homepage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recipe_app/ui/cubit/homepage_cubit.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); // ensure that the binding is initialized
+  var dir = await getApplicationDocumentsDirectory();
+  Hive.init(dir.path);
   runApp(const MyApp());
 }
 

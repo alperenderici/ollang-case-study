@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe_app/data/repo/recipe_repository.dart';
 import 'package:recipe_app/ui/cubit/favorite_recipes_cubit.dart';
 import 'package:recipe_app/ui/cubit/homepage_cubit.dart';
 import 'package:recipe_app/ui/cubit/homepage_state.dart';
@@ -65,7 +66,9 @@ class _HomepageState extends State<Homepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: ((context) => const FavoriteRecipesPage()),
+                    builder: ((context) => FavoriteRecipesPage(
+                          recipeRepository: RecipeRepository(),
+                        )),
                   ),
                 ).then(
                   (value) => context
@@ -107,6 +110,7 @@ class _HomepageState extends State<Homepage> {
                           MaterialPageRoute(
                             builder: ((context) => RecipeDetailPage(
                                   recipe: recipes[index],
+                                  recipeRepository: RecipeRepository(),
                                 )),
                           ),
                         );

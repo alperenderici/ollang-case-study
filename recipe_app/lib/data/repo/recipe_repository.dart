@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:recipe_app/data/entity/recipe.dart';
 import 'package:recipe_app/data/sqlite/database.dart';
+import 'package:recipe_app/hive_service.dart';
 
 class RecipeRepository {
   //Recipe Search API
@@ -68,16 +69,33 @@ class RecipeRepository {
     }
   }
 
-  // add favorite recipe
+  //add favorite recipe with using hive
   Future<void> addFavRecipe(Recipe recipe) async {
-    var db = await DB.connectDB();
-    await db.insert('favs', {
-      'recipe_label': recipe.label,
-      'recipe_image': recipe.image,
-      'recipe_ingredients': jsonEncode(recipe.ingredients),
-      'recipe_ingredientLines': jsonEncode(recipe.ingredientLines),
+    LocalStorage.addFavRecipe(recipe.toJson());
+  }
+
+  //list favorite recipes with using hive
+  Future<List<Recipe>> listFavRecipes() async {
+    List<String> favs = await LocalStorage.getFavRecipes();
+    return List.generate(favs.length, (index) {
+      var map = favs[index];
+      return Recipe.fromJson(jsonDecode(map));
     });
   }
+
+  //search favorite recipes with using hive
+  Future<List<Recipe>> searchFavRecipes(String searchword) async {
+    List<String> favs = await LocalStorage.searchFavRecipes(searchword);
+    return List.generate(favs.length, (index) {
+      var map = favs[index];
+      return Recipe.fromJson(jsonDecode(map));
+    });
+  }
+
+  // add favorite recipe
+  // Future<void> addFavRecipe(Recipe recipe) async {
+  //   LocalStorage.addFav(Recipe.toJson(json));
+  // }
 
   // delete favorite recipe
   Future<void> deleteFavRecipe(Recipe recipe) async {
@@ -87,36 +105,35 @@ class RecipeRepository {
   }
 
   // list favorite recipes
-  Future<List<Recipe>> listFavRecipes() async {
-    var db = await DB.connectDB();
-    List<Map<String, dynamic>> favs = await db.rawQuery("SELECT * FROM favs");
-    return List.generate(favs.length, (index) {
-      var map = favs[index];
-      return Recipe(
-        label: map["recipe_label"],
-        image: map["recipe_image"],
-        ingredients: jsonDecode(map["recipe_ingredients"]),
-        ingredientLines: jsonDecode(map["recipe_ingredientLines"]),
-        isFavorite: true,
-      );
-    });
-  }
+  // Future<List<Recipe>> listFavRecipes() async {
+  //   var db = await DB.connectDB();
+  //   List<Map<String, dynamic>> favs = await db.rawQuery("SELECT * from favs");
+  //   return List.generate(favs.length, (index) {
+  //     var map = favs[index];
+  //     return Recipe(
+  //       label: map["recipe_label"],
+  //       image: map["recipe_image"],
+  //       ingredients: null,
+  //       ingredientLines: null,
+  //       isFavorite: true,
+  //     );
+  //   });
+  // }
 
   //search favorite recipes
-  Future<List<Recipe>> searchFavRecipes(String searchword) async {
-    var db = await DB.connectDB();
-    List<Map<String, dynamic>> maps = await db
-        .rawQuery("SELECT * FROM favs WHERE recipe_label LIKE '%$searchword%'");
-    return List.generate(maps.length, (index) {
-      var line = maps[index];
-      return Recipe(
-        label: line["recipe_label"],
-        image: line["recipe_image"],
-        ingredients: jsonDecode(line["recipe_ingredients"]),
-        ingredientLines: jsonDecode(line["recipe_ingredientLines"]),
-        isFavorite: true,
-      );
-    });
-  }
-}//class bracet
-
+  // Future<List<Recipe>> searchFavRecipes(String searchword) async {
+  //   var db = await DB.connectDB();
+  //   List<Map<String, dynamic>> maps = await db
+  //       .rawQuery("SELECT * FROM favs WHERE recipe_label LIKE '%$searchword%'");
+  //   return List.generate(maps.length, (index) {
+  //     var line = maps[index];
+  //     return Recipe(
+  //       label: line["recipe_label"],
+  //       image: line["recipe_image"],
+  //       ingredients: jsonDecode(line["recipe_ingredients"]),
+  //       ingredientLines: jsonDecode(line["recipe_ingredientLines"]),
+  //       isFavorite: true,
+  //     );
+  //   });
+  // }
+} //class bracet

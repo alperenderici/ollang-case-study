@@ -20,6 +20,8 @@ class DB {
       );
       print("Database copied");
     }
-    return openDatabase(dbPath);
+    var db = await openDatabase(dbPath);
+    var a = await db.rawQuery("SELECT * from favs");
+    return db;
   }
 }

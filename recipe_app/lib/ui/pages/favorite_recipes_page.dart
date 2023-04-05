@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recipe_app/data/repo/recipe_repository.dart';
 import 'package:recipe_app/ui/cubit/favorite_recipes_cubit.dart';
 import 'package:recipe_app/ui/cubit/favorite_recipes_state.dart';
 import 'package:recipe_app/ui/cubit/homepage_cubit.dart';
 import 'package:recipe_app/ui/pages/homepage.dart';
+import 'package:recipe_app/ui/pages/recipe_detail_page.dart';
 
 class FavoriteRecipesPage extends StatefulWidget {
-  const FavoriteRecipesPage({super.key});
+  final RecipeRepository recipeRepository;
+  const FavoriteRecipesPage({Key? key, required this.recipeRepository})
+      : super(key: key);
 
   @override
   State<FavoriteRecipesPage> createState() => _FavoriteRecipesPageState();
@@ -88,54 +92,67 @@ class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
                 itemCount: state.favoriteRecipes.length,
                 itemBuilder: (context, index) {
                   final recipe = state.favoriteRecipes[index];
-                  return Dismissible(
-                    key: Key(recipe.label),
-                    onDismissed: (direction) {
-                      context
-                          .read<FavoriteRecipesCubit>()
-                          .deleteFavoriteRecipe(recipe);
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.only(right: 15.0),
-                            child: Text(
-                              "Remove",
-                              style: TextStyle(color: Colors.white),
+                  return GestureDetector(
+                    onTap: (() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => RecipeDetailPage(
+                                recipe: recipe,
+                                recipeRepository: RecipeRepository(),
+                              )),
+                        ),
+                      );
+                    }),
+                    child: Dismissible(
+                      key: Key(recipe.label),
+                      onDismissed: (direction) {
+                        context
+                            .read<FavoriteRecipesCubit>()
+                            .deleteFavoriteRecipe(recipe);
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(right: 15.0),
+                              child: Text(
+                                "Remove",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          color: Colors.purple[100],
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              isThreeLine: false,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              leading: Image.network(
-                                recipe.image,
-                                width: 100,
-                                height: 100,
-                              ),
-                              title: Text(
-                                recipe.label,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            color: Colors.purple[100],
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                isThreeLine: false,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                leading: Image.network(
+                                  recipe.image,
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                title: Text(
+                                  recipe.label,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )),
+                          )),
+                    ),
                   );
                 },
               ),

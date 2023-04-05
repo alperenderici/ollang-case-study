@@ -32,25 +32,25 @@ class FavoriteRecipesCubit extends Cubit<FavoriteRecipesState> {
     }
   }
 
-  void toggleFavorite(
-    Recipe recipe,
-  ) async {
-    try {
-      if (recipe.isFavorite) {
-        await _repository.deleteFavRecipe(recipe);
-      } else {
-        await _repository.addFavRecipe(recipe);
-      }
-      final updatedRecipe = recipe.copyWith(isFavorite: !recipe.isFavorite);
-      emit(
-        FavoriteRecipeToggled(updatedRecipe),
-      );
-    } catch (e) {
-      emit(
-        FavoriteRecipesError('Failed to toggle favorite recipe: $e'),
-      );
-    }
-  }
+  // void toggleFavorite(
+  //   Recipe recipe,
+  // ) async {
+  //   try {
+  //     if (recipe.isFavorite) {
+  //       await _repository.deleteFavRecipe(recipe);
+  //     } else {
+  //       await _repository.addFavRecipe(recipe);
+  //     }
+  //     final updatedRecipe = recipe.copyWith(isFavorite: !recipe.isFavorite);
+  //     emit(
+  //       FavoriteRecipeToggled(updatedRecipe),
+  //     );
+  //   } catch (e) {
+  //     emit(
+  //       FavoriteRecipesError('Failed to toggle favorite recipe: $e'),
+  //     );
+  //   }
+  // }
 
   void deleteFavoriteRecipe(Recipe recipe) async {
     try {
